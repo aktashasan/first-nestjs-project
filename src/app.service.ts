@@ -37,6 +37,25 @@ export class AppService {
   }
 
   async remove(id: number): Promise<void> {
-    await this.catRepository.delete(id);
+  console.log('Deleting record with ID:', id);
+  try {
+    await this.catRepository.delete( id);
+    console.log('Record deleted successfully.');
+  } catch (error) {
+    console.error('Error deleting record:', error);
+    throw error; // Rethrow the error to handle it at the higher level
   }
+}
+async updateCat(id: number, updatedCatData: Partial<CatEntity>): Promise<CatEntity> {
+  const catToUpdate = await this.catRepository.findOneBy({id: id});
+
+  if (!catToUpdate) {
+    throw new NotFoundException(`Cat with ID ${id} not found`);
+  }
+
+  // Update properties of the cat with the new data
+  Object.assign(catToUpdate, updatedCatData);
+
+  return this.catRepository.save(catToUpdate);
+}
 }

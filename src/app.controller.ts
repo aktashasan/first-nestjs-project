@@ -8,6 +8,7 @@ import {
   Delete,
   NotFoundException,
   Param,
+  Put,
 } from '@nestjs/common';
 import { CatEntity } from './dto/create-cat.entity';
 import { AppService } from './app.service';
@@ -35,7 +36,7 @@ export class AppController {
     await this.appService.deleteAll();
     return { message: 'All cats have been deleted' };
   }
-  @Get(':id')
+  @Get('list/:id')
   async getById(@Param('id') id: number) {
     try {
       const cat = await this.appService.getById(id);
@@ -48,9 +49,13 @@ export class AppController {
     }
   }
   @Delete('delete/:id')
-  async deleteById(@Res() res: Response, @Body() id: number) {
+  async deleteById(@Res() res: Response, @Param() id: number) {
+    console.log(id)
     await this.appService.remove(id);
-    return { message: 'Cat has been deleted' };
+    res.status(HttpStatus.OK).send();
+  }
+@Put(':id')
+  async updateCat(@Param('id') id: number, @Body() updatedCatData: Partial<CatEntity>): Promise<CatEntity> {
+    return this.appService.updateCat(id, updatedCatData);
   }
 }
-
