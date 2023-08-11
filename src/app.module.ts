@@ -3,14 +3,16 @@ import { AppController } from './app.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppService } from './app.service';
 import { ConfigModule,ConfigService } from '@nestjs/config';
-import { CatEntity } from './dto/create-cat.entity';
+import { DogModule } from './dog/dog.module';
+import { CatModule } from './cat/cat.module';
+import { DogEntity } from './dog/entities/dog.entity';
+import { CatEntity } from './cat/entities/cat.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ 
       envFilePath: '.env',
     }),
-    TypeOrmModule.forFeature([CatEntity]),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -22,11 +24,13 @@ import { CatEntity } from './dto/create-cat.entity';
           username: configService.get('DB_USERNAME'),
           password: configService.get('DB_PASSWORD'),
           database: configService.get('DB_NAME'),
-          entities: [CatEntity],
+          entities: [DogEntity, CatEntity],
           synchronize: true,
       }
     }
     }),
+    DogModule,
+    CatModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,16 +1,16 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class CatEntity {
+export class DogEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ type: 'varchar', length: 30 })
   name: string;
 
-  @Column()
+  @Column({ type: 'int'})
   age: number;
 
-  @Column()
+  @Column({ type: 'varchar', length: 30})
   breed: string;
 }
